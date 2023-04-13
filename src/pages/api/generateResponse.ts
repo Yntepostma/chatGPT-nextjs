@@ -27,6 +27,7 @@ export default async function handler(
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: `${userInput}` }],
     });
+
     const chatGptResponse = response.data.choices[0].message;
     res.status(200).send({ message: chatGptResponse });
   } catch (err: any) {

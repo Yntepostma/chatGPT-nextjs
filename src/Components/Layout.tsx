@@ -1,4 +1,4 @@
-import Navbar from "./Navbar";
+import { NavBar } from "../Components";
 
 type usefulBotsLayoutProps = {
   children: React.ReactNode;
@@ -7,8 +7,8 @@ type usefulBotsLayoutProps = {
 export default function Layout({ children }: usefulBotsLayoutProps) {
   return (
     <>
-      <Navbar />
-      <main>{children}</main>
+      <NavBar />
+      <main className="m-4 font-mono">{children}</main>
     </>
   );
 }
