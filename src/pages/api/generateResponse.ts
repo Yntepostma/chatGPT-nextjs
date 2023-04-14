@@ -20,12 +20,19 @@ export default async function handler(
     res.status(404).json("invalid request");
     return;
   }
-  const { userInput } = req.body;
+  const { input } = req.body;
+  console.log("input", input);
+  console.log("req body", req.body);
   try {
     console.log("reached");
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: `${userInput}` }],
+      messages: [
+        {
+          role: "user",
+          content: `${input}`,
+        },
+      ],
     });
 
     const chatGptResponse = response.data.choices[0].message;

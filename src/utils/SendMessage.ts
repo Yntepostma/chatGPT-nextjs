@@ -1,11 +1,11 @@
-import { FormEvent } from "react";
+import { Message } from "@/pages/requestbot";
 
-const SendMessage = async (userInput: string) => {
+const SendMessage = async (input: string) => {
   try {
     const response = await fetch("api/generateResponse", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userInput }),
+      body: JSON.stringify({ input }),
     });
     return await response.json();
   } catch (err: any) {

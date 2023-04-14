@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { FormEvent } from "react";
-import Head from "next/head";
 import SendMessage from "@/utils/SendMessage";
-import { Button, Title, Page } from "@/Components";
+import { Button, Page } from "@/Components";
 
-type Message = {
+export type Message = {
   role: string;
   content: string;
 };
@@ -13,6 +12,7 @@ const RequestBot = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showPrevious, setShowPrevious] = useState<boolean>(false);
 
   console.log("messages", messages);
 
@@ -39,7 +39,8 @@ const RequestBot = () => {
       { role: "user", content: userInput },
     ]);
     try {
-      const data = await SendMessage(userInput);
+      const input = userInput;
+      const data = await SendMessage(input);
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: "chatgpt", content: data.message.content },
@@ -77,14 +78,14 @@ const RequestBot = () => {
           </form>
           <div>
             <h2 className="text-xl font-bold">Question:</h2>
-            <p className="w-4/5 px-2 mb-8 border-2 border-black rounded min-h-1/2 min-h- black">
+            <p className="w-4/5 px-2 pt-1 mb-8 border-2 border-black rounded min-h-1/2 min-h- black">
               {questions[0]?.content}
             </p>
             <h2 className="text-xl font-bold">Response:</h2>
             {loading ? (
               "Loading....."
             ) : (
-              <p className="w-4/5 px-2 mb-4 border-2 border-black rounded min-h-1/2 black">
+              <p className="w-4/5 px-2 pt-1 mb-4 border-2 border-black rounded min-h-1/2 black">
                 {responses[0]?.content}
               </p>
             )}
@@ -92,17 +93,31 @@ const RequestBot = () => {
         </div>
 
         <div className="w-3/5">
-          {[...messages].map((message, index) => {
-            if (message.role === "user") {
-              return (
-                <p className="underline underline-offset-1" key={index}>
-                  &#62; {message.content}
-                </p>
-              );
-            } else {
-              return <p key={index}>&#62; {message.content}</p>;
-            }
-          })}
+          <button
+            className="px-2 mb-2 border-2 border-black w-content-fit "
+            onClick={() => setShowPrevious(!showPrevious)}
+          >
+            {showPrevious ? "Hide" : "Show Previous"}
+          </button>
+          {showPrevious && (
+            <div>
+              {messages.length < 1 ? (
+                <p className="ml-1">&#62; No previous messages yet</p>
+              ) : (
+                [...messages].map((message, index) => {
+                  if (message.role === "user") {
+                    return (
+                      <p className="underline underline-offset-1" key={index}>
+                        &#62; {message.content}
+                      </p>
+                    );
+                  } else {
+                    return <p key={index}>&#62; {message.content}</p>;
+                  }
+                })
+              )}
+            </div>
+          )}
         </div>
       </div>
     </Page>
