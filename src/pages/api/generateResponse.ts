@@ -5,11 +5,6 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${configuration.apiKey}`,
-};
-
 const openai = new OpenAIApi(configuration);
 
 export default async function handler(
@@ -21,12 +16,10 @@ export default async function handler(
     return;
   }
   const { input } = req.body;
-  console.log("input", input);
-  console.log("req body", req.body);
   try {
-    console.log("reached");
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
+      temperature: 0.7,
       messages: [
         {
           role: "user",

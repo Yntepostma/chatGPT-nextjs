@@ -12,7 +12,7 @@ export const Page = ({ title, children }: PageProps) => {
       <Head>
         <title>{title} - UseFul Bots</title>
       </Head>
-      <header>
+      <header className="sticky top-0 z-30 ">
         <NavBar />
       </header>
       <main className="px-6 py-4 mt-6 font-mono">

@@ -1,7 +1,8 @@
 type ButtonLayoutProps = {
   children: React.ReactNode;
-  type: string;
+  type?: string;
   disabled: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export const Button = ({ children, disabled }: ButtonLayoutProps) => {

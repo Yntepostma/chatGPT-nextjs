@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Page, Button } from "@/Components";
 import { Message } from "./requestbot";
 import SendMessage from "@/utils/SendMessage";
 import { FormEvent } from "react";
-import Markdown from "markdown-to-jsx";
+import ReactMarkdown from "react-markdown";
 
 const vegetables = [
   { id: 1, value: "cucumber" },
@@ -12,11 +12,16 @@ const vegetables = [
   { id: 4, value: "paprika" },
   { id: 5, value: "lettuce" },
   { id: 6, value: "broccoli" },
+  { id: 7, value: "potatos" },
 ];
 const meat_nonMeat = [
   { id: 1, value: "beef" },
   { id: 2, value: "chicken" },
   { id: 3, value: "pork" },
+  { id: 4, value: "salmon" },
+  { id: 5, value: "tuna" },
+  { id: 6, value: "tofu" },
+  { id: 7, value: "tempeh" },
 ];
 
 const herbs = [
@@ -31,12 +36,13 @@ const RecipeBot = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [checkedList, setCheckedList] = useState<string[]>([]);
+  const [addedIngredients, setAddedIngredients] = useState<string>("");
 
-  const input = `recipe + instructions with the following ingredients: ${checkedList.join(
+  const input = `create a recipe + instructions with the following ingredients: ${checkedList?.join(
     ", "
-  )} include name of recipe, ingredients and instructions. Use markdown format: bold for name of recipe, instructions and ingredients headings. Numbered list for instructions. Empty line between each part`;
+  )}, ${addedIngredients}. You can include additional ingredients. format: ### include name, ingredients and instructions. Use markdown format: bold for name, instructions and ingredients headings. Numbered list for instructions. Empty line between each part###`;
 
-  console.log("input", input);
+  console.log(input);
 
   const handleSelect = (e: any) => {
     const value = e.target.value;
@@ -49,12 +55,28 @@ const RecipeBot = () => {
     }
   };
 
+  const handleUnCheck = () => {
+    const checkbox: NodeListOf<HTMLInputElement> = document.querySelectorAll(
+      'input[type="checkbox"]'
+    );
+    for (let i = 0; i < checkbox.length; i++) {
+      checkbox[i].checked = false;
+    }
+  };
+
   const responses = [...messages]
     .reverse()
     .filter((message) => message.role === "chatgpt");
 
-  const handleInput = async (e: FormEvent) => {
+  const handleInput = (e: FormEvent) => {
     e.preventDefault();
+    setAddedIngredients(userInput);
+    setUserInput("");
+  };
+
+  const handleClick = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log("reached");
     setLoading(true);
     if (input.trim() === "") {
       return;
@@ -76,94 +98,127 @@ const RecipeBot = () => {
     }
   };
 
-  console.log("checked", checkedList);
-
   return (
     <Page title="RecipeBot">
       <div className="flex">
-        <div className="w-1/5">
+        <div className="w-1/5 mr-10">
           <h2 className="text-xl font-bold">Vegetables</h2>
           {vegetables.map((item) => {
             return (
               <div key={item.id} className="">
-                <input
-                  type="checkbox"
-                  name="languages"
-                  value={item.value}
-                  onChange={handleSelect}
-                />
-                <label className="pl-2">{item.value}</label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="ingredients"
+                    value={item.value}
+                    onChange={handleSelect}
+                  />
+                  <span className="pl-2">{item.value}</span>
+                </label>
               </div>
             );
           })}
 
-          <h2 className="mt-8 text-xl font-bold">Meat & Vegetarian</h2>
+          <h2 className="mt-6 text-xl font-bold">Meat, Fish & Vegetarian</h2>
           {meat_nonMeat.map((item) => {
             return (
               <div key={item.id} className="">
-                <input
-                  type="checkbox"
-                  name="languages"
-                  value={item.value}
-                  onChange={handleSelect}
-                />
-                <label className="pl-2">{item.value}</label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="ingredients"
+                    value={item.value}
+                    onChange={handleSelect}
+                  />
+                  <span className="pl-2">{item.value}</span>
+                </label>
               </div>
             );
           })}
-          <h2 className="mt-8 text-xl font-bold">Herbs</h2>
+          <h2 className="mt-6 text-xl font-bold">Herbs</h2>
           {herbs.map((item) => {
             return (
               <div key={item.id} className="">
-                <input
-                  type="checkbox"
-                  name="languages"
-                  value={item.value}
-                  onChange={handleSelect}
-                />
-                <label className="pl-2">{item.value}</label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="ingredients"
+                    value={item.value}
+                    onChange={handleSelect}
+                  />
+                  <span className="pl-2">{item.value}</span>
+                </label>
               </div>
             );
           })}
-        </div>
-        <div className="w-3/5">
-          <span className="text-xl font-bold ">Add any additional</span>
-          <span className="ml-2 text-sm">{"(comma separated)"}</span>
-          <form onSubmit={handleInput}>
-            <textarea
-              className="block w-4/5 h-20 px-3 py-1 mb-4 border rounded active-black :focus"
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-            />
+          <div className="mt-6">
+            <h2 className="text-xl font-bold ">Add any additional</h2>
+            <span className="text-sm ">{"(comma separated)"}</span>
+            <form onSubmit={handleInput}>
+              <textarea
+                className="block w-4/5 h-10 px-3 py-1 mb-2 border rounded active-black :focus"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+              />
 
-            <div>
+              <div>
+                <button
+                  className="px-2 mb-2 mr-2 border-2 border-black w-content-fit hover:font-bold "
+                  type="submit"
+                >
+                  add
+                </button>
+                <button
+                  className="px-2 mb-2 border-2 border-black w-content-fit hover:font-bold "
+                  type="reset"
+                  onClick={() => {
+                    setCheckedList([]);
+                    handleUnCheck();
+                    setUserInput("");
+                  }}
+                >
+                  clear
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="w-3/6">
+          <h2 className="text-xl font-bold">Ingredients:</h2>
+          <form onSubmit={handleClick}>
+            <p className="w-full px-2 mb-2 border-2 border-black rounded min-h-1/2 min-h- black">
+              {checkedList.join(", ")} {addedIngredients}
+            </p>
+            <div className="flex justify-between">
               {loading ? (
-                <Button disabled={true} type="submit">
-                  Loading
-                </Button>
+                <Button disabled={true}>Loading</Button>
               ) : (
                 <Button disabled={false} type="submit">
-                  Send Request
+                  Find Recipe
                 </Button>
               )}
+              <button
+                className="h-10 px-2 mb-2 border-2 border-black w-content-fit hover:font-bold "
+                type="reset"
+                onClick={() => {
+                  setUserInput("");
+                  setCheckedList([]);
+                  setAddedIngredients("");
+                  handleUnCheck();
+                }}
+              >
+                clear
+              </button>
             </div>
           </form>
-          <div>
-            <h2 className="text-xl font-bold">Ingredients:</h2>
-            <p className="w-4/5 px-2 mb-8 border-2 border-black rounded min-h-1/2 min-h- black">
-              {checkedList.map((item, index) => {
-                return <span key={index}>{item}, </span>;
-              })}
-            </p>
-            <h2 className="text-xl font-bold">Recipe:</h2>
-            {loading ? (
-              "Loading....."
-            ) : (
-              <Markdown className="w-4/5 px-2 mb-4 border-2 border-black rounded min-h-1/2 black">
-                {responses[0]?.content}
-              </Markdown>
-            )}
-          </div>
+          <h2 className="text-xl font-bold">Recipe:</h2>
+          {loading ? (
+            "Loading....."
+          ) : (
+            <ReactMarkdown className="w-full px-2 mb-4 border-2 border-black rounded min-h-1/2 black">
+              {responses[0]?.content}
+            </ReactMarkdown>
+          )}
         </div>
       </div>
     </Page>

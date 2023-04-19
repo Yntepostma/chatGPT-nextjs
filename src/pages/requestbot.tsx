@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormEvent } from "react";
 import SendMessage from "@/utils/SendMessage";
 import { Button, Page } from "@/Components";
+import ReactMarkdown from "react-markdown";
 
 export type Message = {
   role: string;
@@ -13,8 +14,6 @@ const RequestBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPrevious, setShowPrevious] = useState<boolean>(false);
-
-  console.log("messages", messages);
 
   const questions = [...messages]
     .reverse()
@@ -39,7 +38,7 @@ const RequestBot = () => {
       { role: "user", content: userInput },
     ]);
     try {
-      const input = userInput;
+      const input = `${userInput} format: use Markdown`;
       const data = await SendMessage(input);
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -86,7 +85,7 @@ const RequestBot = () => {
               "Loading....."
             ) : (
               <p className="w-4/5 px-2 pt-1 mb-4 border-2 border-black rounded min-h-1/2 black">
-                {responses[0]?.content}
+                <ReactMarkdown>{responses[0]?.content}</ReactMarkdown>
               </p>
             )}
           </div>
