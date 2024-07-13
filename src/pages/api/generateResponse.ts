@@ -12,11 +12,13 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== "POST") {
-    res.status(404).json("invalid request");
+    res.status(405).json("invalid request");
     return;
   }
+
   const { input } = req.body;
   try {
+    console.log("reached");
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       temperature: 0.7,
@@ -27,10 +29,13 @@ export default async function handler(
         },
       ],
     });
-
-    const chatGptResponse = response.data.choices[0].message;
+    let chatGptResponse = response.data.choices[0].message;
     res.status(200).send({ message: chatGptResponse });
   } catch (err: any) {
+    console.error(
+      "Error from OpenAI API:",
+      err.response ? err.response.data : err.message
+    );
     res.status(400).send(err.message);
   }
 }

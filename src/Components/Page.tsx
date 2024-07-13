@@ -4,11 +4,17 @@ import { NavBar, Title } from "../Components";
 type PageProps = {
   title: string;
   children: React.ReactNode;
+  backgroundImage?: string;
 };
 
-export const Page = ({ title, children }: PageProps) => {
+export const Page = ({ title, children, backgroundImage }: PageProps) => {
   return (
-    <>
+    <div
+      style={{
+        backgroundImage: backgroundImage ?? undefined,
+      }}
+      className="bg-cover"
+    >
       <Head>
         <title>{title} - UseFul Bots</title>
       </Head>
@@ -19,6 +25,6 @@ export const Page = ({ title, children }: PageProps) => {
         <Title>{title}</Title>
         {children}
       </main>
-    </>
+    </div>
   );
 };
