@@ -33,7 +33,7 @@ const country = [
   { id: 8, value: "Switzerland" },
 ];
 
-const additionalRequirements = [
+const additionals = [
   { id: 1, value: "child friendly" },
   { id: 2, value: "no children" },
   { id: 3, value: "swimming pool" },
@@ -43,33 +43,88 @@ const RecipeBot = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [checkedList, setCheckedList] = useState<string[]>([]);
-  const [addedIngredients, setAddedIngredients] = useState<string>("");
+  const [holidayTypes, setHolidayTypes] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [locations, setLocations] = useState<string[]>([]);
+  const [additionalRequirements, setAdditionalRequirements] = useState<
+    string[]
+  >([]);
+  const [addedRequirements, setAddedRequirements] = useState<string>("");
   const [language, setLanguage] = useState<string>("");
 
-  const input = `Create a recipe with the following ingredients: ${checkedList?.join(
-    ", "
-  )}, ${addedIngredients}. Provide your response in ${language}.You can include additional ingredients. Use the following format:
-### 
-**Name of the recipe**
+  const input = `Provide 3 holiday suggestions based on the following requirements:
 
-**Ingredients:**
-- List of ingredients
+It should be in one of the following countries: ${countries}
+It should be in one of the following locations: ${locations}
+The type of holiday should include one of the following: ${holidayTypes}
+One of the following additional requirements should be included: ${additionalRequirements}
+Provide your response in ${language}. Use the following format:
 
-**Instructions:**
-1. Step-by-step instructions
+**1. [Name of Suggestion]**
 
-Include bold headings for "Ingredients" and "Instructions". Provide the instructions as a numbered list. Leave an empty line between each part.
-###`;
+**Country:**
 
-  const handleSelect = (e: any) => {
+[Name of Country]
+
+**Description:**
+1. Name of the camping/hotel/B&B
+2. Detailed description of the location and the environment
+3. [**URL to the website of the location**]
+
+**2. [Name of Suggestion]**
+
+**Country:**
+
+[Name of Country]
+
+**Description:**
+1. Name of the camping/hotel/B&B
+2. Detailed description of the location and the environment
+3. [**URL to the website of the location**]
+
+**3. [Name of Suggestion]**
+
+**Country:**
+
+[Name of Country]
+
+**Description:**
+1. Name of the camping/hotel/B&B
+2. Detailed description of the location and the environment
+3. [URL to the website of the location]
+
+Include bold headings for "Country," "Description," Provide the Description as a numbered list. Leave an empty line between each part and two empty lines between each suggestion.`;
+
+  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    const name = e.target.name;
     const isChecked = e.target.checked;
-    if (isChecked) {
-      setCheckedList([...checkedList, value]);
-    } else {
-      const filteredList = checkedList.filter((item) => item !== value);
-      setCheckedList(filteredList);
+    if (name === "type") {
+      if (isChecked) {
+        setHolidayTypes([...holidayTypes, value]);
+      } else {
+        setHolidayTypes(holidayTypes.filter((item) => item !== value));
+      }
+    } else if (name === "country") {
+      if (isChecked) {
+        setCountries([...countries, value]);
+      } else {
+        setCountries(countries.filter((item) => item !== value));
+      }
+    } else if (name === "location") {
+      if (isChecked) {
+        setLocations([...locations, value]);
+      } else {
+        setLocations(locations.filter((item) => item !== value));
+      }
+    } else if (name === "additionals") {
+      if (isChecked) {
+        setAdditionalRequirements([...additionalRequirements, value]);
+      } else {
+        setAdditionalRequirements(
+          additionalRequirements.filter((item) => item !== value)
+        );
+      }
     }
   };
 
@@ -88,7 +143,7 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
 
   const handleInput = (e: FormEvent) => {
     e.preventDefault();
-    setAddedIngredients(userInput);
+    setAddedRequirements(userInput);
     setUserInput("");
   };
 
@@ -129,7 +184,7 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
                   <input
                     className="checked:accent-green-700"
                     type="checkbox"
-                    name="ingredients"
+                    name="type"
                     value={item.value}
                     onChange={handleSelect}
                   />
@@ -147,7 +202,7 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
                   <input
                     className="checked:accent-green-700"
                     type="checkbox"
-                    name="ingredients"
+                    name="location"
                     value={item.value}
                     onChange={handleSelect}
                   />
@@ -164,7 +219,7 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
                   <input
                     className="checked:accent-green-700"
                     type="checkbox"
-                    name="ingredients"
+                    name="country"
                     value={item.value}
                     onChange={handleSelect}
                   />
@@ -174,14 +229,14 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
             );
           })}
           <h2 className="mt-6 text-xl font-bold">Additonal Requirements</h2>
-          {additionalRequirements.map((item) => {
+          {additionals.map((item) => {
             return (
               <div key={item.id} className="">
                 <label>
                   <input
                     className="checked:accent-green-700"
                     type="checkbox"
-                    name="ingredients"
+                    name="additionals"
                     value={item.value}
                     onChange={handleSelect}
                   />
@@ -211,7 +266,10 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
                   className="px-2 mb-2 bg-white border-2 border-black w-content-fit hover:font-bold"
                   type="reset"
                   onClick={() => {
-                    setCheckedList([]);
+                    setCountries([]);
+                    setAdditionalRequirements([]);
+                    setLocations([]);
+                    setHolidayTypes([]);
                     handleUnCheck();
                     setUserInput("");
                   }}
@@ -225,9 +283,23 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
         <div className="w-3/6">
           <h2 className="text-xl font-bold bg-white w-fit">Ingredients:</h2>
           <form onSubmit={handleClick}>
-            <p className="w-full px-2 mb-2 bg-white border-2 border-black rounded bw-white min-h-1/2 min-h- black">
-              {checkedList.join(", ")} {addedIngredients}
-            </p>
+            <ol className="w-full px-2 mb-2 bg-white border-2 border-black rounded bw-white min-h-1/2 min-h- black">
+              <li>
+                <b>Types:</b> {` ${holidayTypes.join(", ")}`}{" "}
+              </li>
+              <li>
+                <b>Locations: </b>
+                {` ${locations.join(", ")} `}
+              </li>
+              <li>
+                <b>Countries: </b>
+                {`${countries.join(", ")} `}
+              </li>
+              <li>
+                <b>Additional requirements: </b>
+                {` ${additionalRequirements.join(", ")} ${addedRequirements}`}
+              </li>
+            </ol>
             <div className="flex justify-between">
               {loading ? (
                 <Button disabled={true}>Loading</Button>
@@ -241,8 +313,11 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
                 type="reset"
                 onClick={() => {
                   setUserInput("");
-                  setCheckedList([]);
-                  setAddedIngredients("");
+                  setCountries([]);
+                  setAdditionalRequirements([]);
+                  setLocations([]);
+                  setHolidayTypes([]);
+                  setAddedRequirements("");
                   handleUnCheck();
                 }}
               >
