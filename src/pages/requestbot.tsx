@@ -59,7 +59,7 @@ const RequestBot = () => {
           <form onSubmit={handleInput}>
             <div>
               <textarea
-                className="block w-4/5 h-20 px-3 py-1 mb-4 border rounded active-black :focus"
+                className="block w-4/5 h-20 px-3 py-1 mb-4 border-2 border-black rounded active-black :focus"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
               />

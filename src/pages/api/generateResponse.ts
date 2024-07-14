@@ -18,7 +18,6 @@ export default async function handler(
 
   const { input } = req.body;
   try {
-    console.log("reached");
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       temperature: 0.7,
@@ -29,7 +28,6 @@ export default async function handler(
         },
       ],
     });
-    console.log("input", input);
     let chatGptResponse = response.data.choices[0].message;
     res.status(200).send({ message: chatGptResponse });
   } catch (err: any) {

@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Page, Button } from "@/Components";
 import { Message } from "./requestbot";
 import SendMessage from "@/utils/SendMessage";
 import { FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
-import image from "../../public/iStock-1198380802.jpg";
+import image from "../../public/iStock-1173579665.jpg";
 import { LanguageToggle } from "@/Components/LanguageToggle";
 import remarkGfm from "remark-gfm";
 import Image from "next/image";
+import { InputField } from "@/Components/InputField";
 
 const vegetables = [
   { id: 1, value: "cucumber" },
@@ -58,7 +59,7 @@ const RecipeBot = () => {
 Include bold headings for "Ingredients" and "Instructions". Provide the instructions as a numbered list. Leave an empty line between each part.
 ###`;
 
-  const handleSelect = (e: any) => {
+  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
     if (isChecked) {
@@ -113,12 +114,10 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
     }
   };
 
-  console.log("message", responses.length > 0 ? responses[0].content : "");
-
   return (
     <Page backgroundImage={`url(${image.src})`} title="RecipeBot">
       <div className="flex">
-        <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black rounded ">
+        <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black rounded opacity-90 ">
           <h2 className="text-xl font-bold">Vegetables</h2>
           {vegetables.map((item) => {
             return (
@@ -203,49 +202,27 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
             </form>
           </div>
         </div>
-        <div className="w-3/6">
-          <h2 className="text-xl font-bold bg-white w-fit">Ingredients:</h2>
-          <form onSubmit={handleClick}>
+        <InputField
+          onSubmit={handleClick}
+          title={"Ingredients"}
+          onClick={() => {
+            setUserInput("");
+            setCheckedList([]);
+            setAddedIngredients("");
+            handleUnCheck();
+          }}
+          content={
             <p className="w-full px-2 mb-2 bg-white border-2 border-black rounded bw-white min-h-1/2 min-h- black">
               {checkedList.join(", ")} {addedIngredients}
             </p>
-            <div className="flex justify-between">
-              {loading ? (
-                <Button disabled={true}>Loading</Button>
-              ) : (
-                <Button disabled={false} type="submit">
-                  Find Recipe
-                </Button>
-              )}
-              <button
-                className="h-10 px-2 mb-2 bg-white border-2 border-black w-content-fit hover:font-bold "
-                type="reset"
-                onClick={() => {
-                  setUserInput("");
-                  setCheckedList([]);
-                  setAddedIngredients("");
-                  handleUnCheck();
-                }}
-              >
-                clear
-              </button>
-            </div>
-          </form>
-          <h2 className="text-xl font-bold bg-white w-fit">Recipe:</h2>
-          {loading ? (
-            "Loading....."
-          ) : (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              className="w-full px-2 mb-4 bg-white border-2 border-black rounded min-h-1/2 black"
-            >
-              {responses[0]?.content}
-            </ReactMarkdown>
-          )}
-        </div>
-        <div className="flex flex-col">
-          <LanguageToggle languageSetter={setLanguage} />
-        </div>
+          }
+          loading={loading}
+          buttonCaption="Find Recipe"
+          responses={responses}
+          title2="Recipe"
+        />
+
+        <LanguageToggle languageSetter={setLanguage} />
       </div>
     </Page>
   );

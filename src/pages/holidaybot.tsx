@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import image from "../../public/iStock-1306238204.jpg";
 import { LanguageToggle } from "@/Components/LanguageToggle";
 import remarkGfm from "remark-gfm";
+import { InputField } from "@/Components/InputField";
 
 const type = [
   { id: 1, value: "camping" },
@@ -175,7 +176,7 @@ Include bold headings for "Country," "Description," Provide the Description as a
   return (
     <Page backgroundImage={`url(${image.src})`} title="HolidayBot">
       <div className="flex">
-        <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black rounded ">
+        <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black rounded opacity-90 ">
           <h2 className="text-xl font-bold">Type of Holiday</h2>
           {type.map((item) => {
             return (
@@ -280,9 +281,20 @@ Include bold headings for "Country," "Description," Provide the Description as a
             </form>
           </div>
         </div>
-        <div className="w-3/6">
-          <h2 className="text-xl font-bold bg-white w-fit">Ingredients:</h2>
-          <form onSubmit={handleClick}>
+
+        <InputField
+          onSubmit={handleClick}
+          title={"Preferences"}
+          onClick={() => {
+            setUserInput("");
+            setCountries([]);
+            setAdditionalRequirements([]);
+            setLocations([]);
+            setHolidayTypes([]);
+            setAddedRequirements("");
+            handleUnCheck();
+          }}
+          content={
             <ol className="w-full px-2 mb-2 bg-white border-2 border-black rounded bw-white min-h-1/2 min-h- black">
               <li>
                 <b>Types:</b> {` ${holidayTypes.join(", ")}`}{" "}
@@ -300,43 +312,12 @@ Include bold headings for "Country," "Description," Provide the Description as a
                 {` ${additionalRequirements.join(", ")} ${addedRequirements}`}
               </li>
             </ol>
-            <div className="flex justify-between">
-              {loading ? (
-                <Button disabled={true}>Loading</Button>
-              ) : (
-                <Button disabled={false} type="submit">
-                  Find Recipe
-                </Button>
-              )}
-              <button
-                className="h-10 px-2 mb-2 bg-white border-2 border-black w-content-fit hover:font-bold "
-                type="reset"
-                onClick={() => {
-                  setUserInput("");
-                  setCountries([]);
-                  setAdditionalRequirements([]);
-                  setLocations([]);
-                  setHolidayTypes([]);
-                  setAddedRequirements("");
-                  handleUnCheck();
-                }}
-              >
-                clear
-              </button>
-            </div>
-          </form>
-          <h2 className="text-xl font-bold bg-white w-fit">Recipe:</h2>
-          {loading ? (
-            "Loading....."
-          ) : (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              className="w-full px-2 mb-4 bg-white border-2 border-black rounded min-h-1/2 black"
-            >
-              {responses[0]?.content}
-            </ReactMarkdown>
-          )}
-        </div>
+          }
+          loading={loading}
+          buttonCaption="Get Suggestions"
+          responses={responses}
+          title2="Suggestions"
+        />
         <div className="flex flex-col">
           <LanguageToggle languageSetter={setLanguage} />
         </div>
