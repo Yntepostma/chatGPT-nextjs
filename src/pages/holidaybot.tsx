@@ -4,35 +4,39 @@ import { Message } from "./requestbot";
 import SendMessage from "@/utils/SendMessage";
 import { FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
-import image from "../../public/iStock-1198380802.jpg";
+import image from "../../public/iStock-1306238204.jpg";
 import { LanguageToggle } from "@/Components/LanguageToggle";
 import remarkGfm from "remark-gfm";
-import Image from "next/image";
 
-const vegetables = [
-  { id: 1, value: "cucumber" },
-  { id: 2, value: "tomato" },
-  { id: 3, value: "courgette" },
-  { id: 4, value: "paprika" },
-  { id: 5, value: "lettuce" },
-  { id: 6, value: "broccoli" },
-  { id: 7, value: "potatos" },
+const type = [
+  { id: 1, value: "camping" },
+  { id: 2, value: "glamping" },
+  { id: 3, value: "hotel" },
+  { id: 4, value: "bed & breakfast" },
 ];
-const meat_nonMeat = [
-  { id: 1, value: "beef" },
-  { id: 2, value: "chicken" },
-  { id: 3, value: "pork" },
-  { id: 4, value: "salmon" },
-  { id: 5, value: "tuna" },
-  { id: 6, value: "tofu" },
-  { id: 7, value: "tempeh" },
+const location = [
+  { id: 1, value: "beach" },
+  { id: 2, value: "mountains" },
+  { id: 3, value: "country side" },
+  { id: 4, value: "lake" },
+  { id: 4, value: "city" },
 ];
 
-const herbs = [
-  { id: 1, value: "parsely" },
-  { id: 2, value: "cilantro" },
-  { id: 3, value: "thyme" },
-  { id: 4, value: "Rosemary" },
+const country = [
+  { id: 1, value: "Netherlands" },
+  { id: 2, value: "Germany" },
+  { id: 3, value: "France" },
+  { id: 4, value: "Belgium" },
+  { id: 5, value: "Spain" },
+  { id: 6, value: "Portugal" },
+  { id: 7, value: "Austria" },
+  { id: 8, value: "Switzerland" },
+];
+
+const additionalRequirements = [
+  { id: 1, value: "child friendly" },
+  { id: 2, value: "no children" },
+  { id: 3, value: "swimming pool" },
 ];
 
 const RecipeBot = () => {
@@ -113,14 +117,12 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
     }
   };
 
-  console.log("message", responses.length > 0 ? responses[0].content : "");
-
   return (
-    <Page backgroundImage={`url(${image.src})`} title="RecipeBot">
+    <Page backgroundImage={`url(${image.src})`} title="HolidayBot">
       <div className="flex">
         <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black rounded ">
-          <h2 className="text-xl font-bold">Vegetables</h2>
-          {vegetables.map((item) => {
+          <h2 className="text-xl font-bold">Type of Holiday</h2>
+          {type.map((item) => {
             return (
               <div key={item.id} className="">
                 <label>
@@ -137,8 +139,8 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
             );
           })}
 
-          <h2 className="mt-6 text-xl font-bold">Meat, Fish & Vegetarian</h2>
-          {meat_nonMeat.map((item) => {
+          <h2 className="mt-6 text-xl font-bold">Location</h2>
+          {location.map((item) => {
             return (
               <div key={item.id} className="">
                 <label>
@@ -154,8 +156,25 @@ Include bold headings for "Ingredients" and "Instructions". Provide the instruct
               </div>
             );
           })}
-          <h2 className="mt-6 text-xl font-bold">Herbs</h2>
-          {herbs.map((item) => {
+          <h2 className="mt-6 text-xl font-bold">Country</h2>
+          {country.map((item) => {
+            return (
+              <div key={item.id} className="">
+                <label>
+                  <input
+                    className="checked:accent-green-700"
+                    type="checkbox"
+                    name="ingredients"
+                    value={item.value}
+                    onChange={handleSelect}
+                  />
+                  <span className="pl-2">{item.value}</span>
+                </label>
+              </div>
+            );
+          })}
+          <h2 className="mt-6 text-xl font-bold">Additonal Requirements</h2>
+          {additionalRequirements.map((item) => {
             return (
               <div key={item.id} className="">
                 <label>

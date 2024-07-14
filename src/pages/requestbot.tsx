@@ -3,6 +3,7 @@ import { FormEvent } from "react";
 import SendMessage from "@/utils/SendMessage";
 import { Button, Page } from "@/Components";
 import ReactMarkdown from "react-markdown";
+import image from "../../public/iStock-1255190078.jpg";
 
 export type Message = {
   role: string;
@@ -52,8 +53,8 @@ const RequestBot = () => {
   };
 
   return (
-    <Page title="RequestBot">
-      <div className="flex">
+    <Page backgroundImage={`url(${image.src})`} title="RequestBot">
+      <div className="flex h-screen">
         <div className="w-3/5">
           <form onSubmit={handleInput}>
             <div>
@@ -76,15 +77,15 @@ const RequestBot = () => {
             </div>
           </form>
           <div>
-            <h2 className="text-xl font-bold">Question:</h2>
-            <p className="w-4/5 px-2 pt-1 mb-8 border-2 border-black rounded min-h-1/2 min-h- black">
+            <h2 className="text-xl font-bold bg-white w-fit">Question:</h2>
+            <p className="w-4/5 px-2 pt-1 mb-8 bg-white border-2 border-black rounded min-h-1/2 min-h- black">
               {questions[0]?.content}
             </p>
-            <h2 className="text-xl font-bold">Response:</h2>
+            <h2 className="text-xl font-bold bg-white w-fit">Response:</h2>
             {loading ? (
               "Loading....."
             ) : (
-              <p className="w-4/5 px-2 pt-1 mb-4 border-2 border-black rounded min-h-1/2 black">
+              <p className="w-4/5 px-2 pt-1 mb-4 bg-white border-2 border-black rounded min-h-1/2 black">
                 <ReactMarkdown>{responses[0]?.content}</ReactMarkdown>
               </p>
             )}
@@ -93,7 +94,7 @@ const RequestBot = () => {
 
         <div className="w-3/5">
           <button
-            className="px-2 mb-2 border-2 border-black w-content-fit "
+            className="px-2 mb-2 bg-white border-2 border-black w-content-fit "
             onClick={() => setShowPrevious(!showPrevious)}
           >
             {showPrevious ? "Hide" : "Show Previous"}
@@ -101,17 +102,29 @@ const RequestBot = () => {
           {showPrevious && (
             <div>
               {messages.length < 1 ? (
-                <p className="ml-1">&#62; No previous messages yet</p>
+                <p className="ml-1 bg-white w-fit">
+                  &#62; No previous messages yet
+                </p>
               ) : (
                 [...messages].map((message, index) => {
                   if (message.role === "user") {
                     return (
-                      <p className="underline underline-offset-1" key={index}>
+                      <p
+                        className="underline bg-white w-fit underline-offset-1"
+                        key={index}
+                      >
                         &#62; {message.content}
                       </p>
                     );
                   } else {
-                    return <p key={index}>&#62; {message.content}</p>;
+                    return (
+                      <ReactMarkdown
+                        className="bg-white rounded w-fit"
+                        key={index}
+                      >
+                        {`> ${message.content}`}
+                      </ReactMarkdown>
+                    );
                   }
                 })
               )}

@@ -13,7 +13,7 @@ export const Page = ({ title, children, backgroundImage }: PageProps) => {
       style={{
         backgroundImage: backgroundImage ?? undefined,
       }}
-      className="bg-cover"
+      className="h-full bg-scroll bg-contain"
     >
       <Head>
         <title>{title} - UseFul Bots</title>

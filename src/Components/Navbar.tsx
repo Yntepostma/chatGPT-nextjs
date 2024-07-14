@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const NavBar = () => {
+  const router = useRouter();
+
+  const isActive = (href: string) => {
+    return router.pathname === href ? "text-white" : "text-gray-400";
+  };
   return (
     <nav className="flex flex-wrap items-center justify-between p-6 font-mono bg-green-800">
       <div className="flex items-center flex-shrink-0 mr-6 text-white">
@@ -18,16 +24,28 @@ export const NavBar = () => {
       <div className="flex-grow block w-full lg:flex lg:items-center lg:w-auto">
         <div className="text-sm lg:flex-grow">
           <Link
-            href="/requestbot"
-            className="block mt-4 mr-4 text-gray-400 lg:inline-block lg:mt-0 hover:text-white"
-          >
-            RequestBot
-          </Link>
-          <Link
             href="/recipebot"
-            className="block mt-4 mr-4 text-gray-400 lg:inline-block lg:mt-0 hover:text-white"
+            className={`block mt-4 mr-4 text-gray-400 lg:inline-block lg:mt-0 hover:text-white ${isActive(
+              "/recipebot"
+            )}`}
           >
             RecipeBot
+          </Link>
+          <Link
+            href="/holidaybot"
+            className={`block mt-4 mr-4 text-gray-400 lg:inline-block lg:mt-0 hover:text-white ${isActive(
+              "/holidaybot"
+            )}`}
+          >
+            HolidayBot
+          </Link>
+          <Link
+            href="/requestbot"
+            className={`block mt-4 mr-4 text-gray-400 lg:inline-block lg:mt-0 hover:text-white ${isActive(
+              "/requestbot"
+            )}`}
+          >
+            RequestBot
           </Link>
         </div>
       </div>
