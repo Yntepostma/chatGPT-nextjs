@@ -5,6 +5,9 @@ import SendMessage from "@/utils/SendMessage";
 import { FormEvent } from "react";
 import ReactMarkdown from "react-markdown";
 import image from "../../public/iStock-1198380802.jpg";
+import { LanguageToggle } from "@/Components/LanguageToggle";
+import remarkGfm from "remark-gfm";
+import Image from "next/image";
 
 const vegetables = [
   { id: 1, value: "cucumber" },
@@ -38,12 +41,22 @@ const RecipeBot = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [addedIngredients, setAddedIngredients] = useState<string>("");
+  const [language, setLanguage] = useState<string>("");
 
-  const input = `create a recipe + instructions with the following ingredients: ${checkedList?.join(
+  const input = `Create a recipe with the following ingredients: ${checkedList?.join(
     ", "
-  )}, ${addedIngredients}. You can include additional ingredients. format: ### include name, ingredients and instructions. Use markdown format: bold for name, instructions and ingredients headings. Numbered list for instructions. Empty line between each part###`;
+  )}, ${addedIngredients}. Provide your response in ${language}. You can include additional ingredients. Use the following format:
+### 
+**Name of the recipe**
 
-  console.log(input);
+**Ingredients:**
+- List of ingredients
+
+**Instructions:**
+1. Step-by-step instructions
+
+Include bold headings for "Ingredients" and "Instructions". Provide the instructions as a numbered list. Leave an empty line between each part.
+###`;
 
   const handleSelect = (e: any) => {
     const value = e.target.value;
@@ -87,10 +100,12 @@ const RecipeBot = () => {
     ]);
     try {
       const data = await SendMessage(input);
+
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: "chatgpt", content: data.message.content },
       ]);
+
       setLoading(false);
       setUserInput("");
     } catch (err: any) {
@@ -98,16 +113,19 @@ const RecipeBot = () => {
     }
   };
 
+  console.log("message", responses.length > 0 ? responses[0].content : "");
+
   return (
     <Page backgroundImage={`url(${image.src})`} title="RecipeCreator">
       <div className="flex">
-        <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black ">
+        <div className="w-1/5 p-2 mr-10 bg-white border-2 border-black rounded ">
           <h2 className="text-xl font-bold">Vegetables</h2>
           {vegetables.map((item) => {
             return (
               <div key={item.id} className="">
                 <label>
                   <input
+                    className="checked:accent-green-700"
                     type="checkbox"
                     name="ingredients"
                     value={item.value}
@@ -125,6 +143,7 @@ const RecipeBot = () => {
               <div key={item.id} className="">
                 <label>
                   <input
+                    className="checked:accent-green-700"
                     type="checkbox"
                     name="ingredients"
                     value={item.value}
@@ -141,6 +160,7 @@ const RecipeBot = () => {
               <div key={item.id} className="">
                 <label>
                   <input
+                    className="checked:accent-green-700"
                     type="checkbox"
                     name="ingredients"
                     value={item.value}
@@ -184,7 +204,7 @@ const RecipeBot = () => {
           </div>
         </div>
         <div className="w-3/6">
-          <h2 className="text-xl font-bold">Ingredients:</h2>
+          <h2 className="text-xl font-bold bg-white w-fit">Ingredients:</h2>
           <form onSubmit={handleClick}>
             <p className="w-full px-2 mb-2 bg-white border-2 border-black rounded bw-white min-h-1/2 min-h- black">
               {checkedList.join(", ")} {addedIngredients}
@@ -211,14 +231,21 @@ const RecipeBot = () => {
               </button>
             </div>
           </form>
-          <h2 className="text-xl font-bold">Recipe:</h2>
+          <h2 className="text-xl font-bold bg-white w-fit">Recipe:</h2>
           {loading ? (
             "Loading....."
           ) : (
-            <ReactMarkdown className="w-full px-2 mb-4 bg-white border-2 border-black rounded min-h-1/2 black">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              className="w-full px-2 mb-4 bg-white border-2 border-black rounded min-h-1/2 black"
+            >
               {responses[0]?.content}
             </ReactMarkdown>
           )}
+        </div>
+        <div className="flex flex-col">
+          <LanguageToggle languageSetter={setLanguage} />
+          <img src="" alt="RecipeImage" />
         </div>
       </div>
     </Page>

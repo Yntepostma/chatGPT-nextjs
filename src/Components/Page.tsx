@@ -21,7 +21,7 @@ export const Page = ({ title, children, backgroundImage }: PageProps) => {
       <header className="sticky top-0 z-30 ">
         <NavBar />
       </header>
-      <main className="px-6 py-4 mt-6 font-mono">
+      <main className="px-6 py-4 font-sans">
         <Title>{title}</Title>
         {children}
       </main>

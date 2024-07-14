@@ -29,6 +29,7 @@ export default async function handler(
         },
       ],
     });
+    console.log("input", input);
     let chatGptResponse = response.data.choices[0].message;
     res.status(200).send({ message: chatGptResponse });
   } catch (err: any) {
