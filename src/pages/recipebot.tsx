@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { Page, Button } from "@/Components";
+import { Page } from "@/Components";
 import { Message } from "./requestbot";
 import SendMessage from "@/utils/SendMessage";
 import { FormEvent } from "react";
-import ReactMarkdown from "react-markdown";
 import image from "../../public/iStock-1173579665.jpg";
 import { LanguageToggle } from "@/Components/LanguageToggle";
-import remarkGfm from "remark-gfm";
-import Image from "next/image";
 import { InputField } from "@/Components/InputField";
 
 const vegetables = [
