@@ -5,14 +5,14 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <Page title="Home">
+    <Page title="">
       <div className="flex">
         <div className="flex flex-col">
-          <h1 className="p-4 font-mono text-2xl bold ">
+          <h1 className="z-10 p-4 font-mono text-2xl bold ">
             Welcome to UseFul Bots
           </h1>
           <Image
-            className="mt-5"
+            className="z-0 mt-7 animate-bounce"
             src={image}
             alt="RobotIUmage"
             width={300}
