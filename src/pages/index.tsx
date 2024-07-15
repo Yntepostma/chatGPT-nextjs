@@ -21,13 +21,13 @@ export default function Home() {
             height={300}
           />
           <Button
-            margin={28}
+            margin={110}
             onClick={() => setAction((prevState) => !prevState)}
           >
             {action ? "freeze" : "fire up"}
           </Button>
         </div>
-        <div className="font-mono ">
+        <div className="ml-20 font-mono">
           <div>
             <h1 className="mt-40 font-mono text-xl font-bold">
               Enjoy the free service of our helping Bots!
