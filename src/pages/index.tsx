@@ -1,23 +1,31 @@
-import { Page } from "@/Components";
+import { Button, Page } from "@/Components";
 import Image from "next/image";
 import image from "../../public/iStock-2156736483.jpg";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
+  const [action, setAction] = useState<boolean>(true);
   return (
-    <Page title="">
+    <Page className="" title="">
       <div className="flex">
-        <div className="flex flex-col">
+        <div className="flex flex-col content-center">
           <h1 className="z-10 p-4 font-mono text-2xl bold ">
             Welcome to UseFul Bots
           </h1>
           <Image
-            className="z-0 mt-7 animate-bounce"
+            className={`z-0 mt-7 ${action && "animate-bounce"}`}
             src={image}
             alt="RobotIUmage"
             width={300}
             height={300}
           />
+          <Button
+            margin={28}
+            onClick={() => setAction((prevState) => !prevState)}
+          >
+            {action ? "freeze" : "fire up"}
+          </Button>
         </div>
         <div className="font-mono ">
           <div>

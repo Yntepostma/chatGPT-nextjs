@@ -5,15 +5,21 @@ type PageProps = {
   title: string;
   children: React.ReactNode;
   backgroundImage?: string;
+  className?: string;
 };
 
-export const Page = ({ title, children, backgroundImage }: PageProps) => {
+export const Page = ({
+  title,
+  children,
+  backgroundImage,
+  className,
+}: PageProps) => {
   return (
     <div
       style={{
         backgroundImage: backgroundImage ?? undefined,
       }}
-      className="h-full bg-scroll bg-contain"
+      className={`h-full bg-scroll bg-contain ${className}`}
     >
       <Head>
         <title>{title} - UseFul Bots</title>
