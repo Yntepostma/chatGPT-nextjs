@@ -22,7 +22,7 @@ export const Page = ({
       className={`h-full bg-scroll bg-contain ${className}`}
     >
       <Head>
-        <title>{title} - UseFul Bots</title>
+        <title>{title}</title>
       </Head>
       <header className="sticky top-0 z-30 ">
         <NavBar />
